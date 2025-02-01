@@ -1,0 +1,5 @@
+com/proyecto/avance/rest/repository/ProductoRepository.class
+com/proyecto/avance/rest/model/Producto.class
+com/proyecto/avance/rest/RestApplication.class
+com/proyect/avance/rest/config/OpenApiConfig.class
+com/proyecto/avance/rest/controller/ProductoController.class
