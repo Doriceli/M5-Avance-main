@@ -1,0 +1,10 @@
+server:
+  port: ${MIAPP_PORT}
+
+spring:
+  data:
+    mongodb:
+      uri: ${MI_URL}
+      database: ${MI_BD}
+      username: ${EL_USER}
+      password: ${EL_PASS}
