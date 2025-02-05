@@ -4,7 +4,7 @@ kind: Deployment
 
 metadata:
 
-  name: m5-avance-rest
+  name: m5-p1-avance-rest
 
 spec:
 
@@ -14,7 +14,7 @@ spec:
 
     matchLabels:
 
-      app: m5-avance-rest
+      app: m5-p1-avance-rest
 
   template:
 
@@ -22,15 +22,15 @@ spec:
 
       labels:
 
-        app: m5-avance-rest
+        app: m5-p1-avance-rest
 
     spec:
 
       containers:
 
-        - name: m5-avance-rest
+        - name: m5-p1-avance-rest
 
-          image: doriceli/avance_rest:v4
+          image: doriceli/avance_rest:v5
 
           ports:
 

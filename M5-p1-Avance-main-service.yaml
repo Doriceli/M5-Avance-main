@@ -4,13 +4,13 @@ kind: Service
 
 metadata:
 
-  name: m5-avance-rest
+  name: m5-p1-avance-rest
 
 spec:
 
   selector:
 
-    app: m5-avance-rest
+    app: m5-p1-avance-rest
 
   ports:
 
