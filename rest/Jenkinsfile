@@ -6,30 +6,29 @@ pipeline {
         maven 'maven'
         jdk 'JDK17'
     }
-    
-        stages {
-        stage ('Initialize') {
-            steps {
-                sh '''
-                echo "PATH = ${PATH}"
-                echo "JAVA_HOME = ${JAVA_HOME}"
-                echo "M2_HOME = ${M2_HOME}"
-                java -version
-                echo "** starting notificaciones compilation"
-                mvn clean package
-                echo "** end notificaciones compilation"                            
-                '''
-            }
-        }
-    }
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dim-docker-registry')
         DOCKER_IMAGE = 'doriceli/avance_rest:v5'
     }
 
-    stages {  // ✅ Agregamos el bloque "stages"
-        stage('Build') {
+    stages {  // ÚNICO bloque "stages"
+    
+        stage('Initialize') {
+            steps {
+                sh '''
+                echo "PATH = $PATH"
+                echo "JAVA_HOME = $JAVA_HOME"
+                echo "M2_HOME = $M2_HOME"
+                java -version
+                echo "** Starting Notificaciones Compilation **"
+                mvn clean package
+                echo "** End Notificaciones Compilation **"
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
             steps {
                 sh 'sudo docker build -t ${DOCKER_IMAGE} .'
             }
@@ -43,7 +42,8 @@ pipeline {
                 '''
             }
         }
-    }  // ✅ Cierre correcto del bloque "stages"
 
-}  // ✅ Cierre correcto del "pipeline"
+    }  // Cierre correcto del bloque "stages"
+
+}  // Cierre correcto del "pipeline"
 
