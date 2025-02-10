@@ -22,7 +22,6 @@ pipeline {
                 echo "M2_HOME = $M2_HOME"
                 java -version
                 echo "** Starting Notificaciones Compilation **"
-                mvn clean package
                 echo "** End Notificaciones Compilation **"
                 '''
             }
