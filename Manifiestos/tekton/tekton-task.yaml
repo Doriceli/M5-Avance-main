@@ -1,15 +1,23 @@
 apiVersion: tekton.dev/v1beta1
 
-kind: TaskRun
+kind: Task
 
 metadata:
 
-  name: hello-world-taskrun
+  name: hello-world
 
   namespace: diploe2-dim
 
 spec:
 
-  taskRef:
+  steps:
 
-    name: hello-world
+    - name: echo
+
+      image: busybox
+
+      script: |
+
+        #!/bin/sh
+
+        echo "Hello, World from Tekton!"
