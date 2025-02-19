@@ -22,10 +22,8 @@ spec:
 
   workspaces:
 
-    - name: output
+    - name: directory
 
       persistentVolumeClaim:
 
-        claimName: workspace
-
-
+        claimName: workspaces

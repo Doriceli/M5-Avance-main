@@ -39,5 +39,5 @@ spec:
       #      emptyDir: {}
       persistentVolumeClaim:
 
-        claimName: workspace   
+        claimName: workspaces
 
