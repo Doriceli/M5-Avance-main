@@ -1,4 +1,9 @@
-FROM openjdk:17-oracle
+#FROM que se utilizo para llamar la imagen para compilar
+#FROM openjdk:17-oracle
+FROM docker.io/library/openjdk:17-oracle
+#From 	ue manda a llamar mi imagen ya funcional
+#FROM docker.io/doriceli/avance_rest:v4
+
 LABEL mainainer="DIM"
 EXPOSE 8085	
 ARG JAR_FILE=targat/*.jar
