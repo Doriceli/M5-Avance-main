@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: kubernetes-actions-
+  namespace: diploe2-dim
+spec:
+  serviceAccountName: tekton-sa
+  taskRef:
+    name: kubernetes-actions
+  params:
+    - name: script
+      value: |
+        kubectl delete deployment avance_rest
+        kubectl create deployment avance_rest --image=docker.io/doriceli/avance_rest:v4
+        echo "----------"
+        kubectl get deployment
+  workspaces:
+    - name: kubeconfig-dir
+      emptyDir: {}
+    - name: manifest-dir
+      emptyDir: {}

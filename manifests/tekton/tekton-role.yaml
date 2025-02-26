@@ -36,7 +36,11 @@ rules:
 
       - "delete"
 
-
+  - apiGroups: ["apps"]
+    
+    resources: ["deployments", "deployments/scale"]
+    
+    verbs: ["get", "list", "watch", "create", "update", "delete", "patch"]
 
   - apiGroups: ["tekton.dev"] # Controller needs to access these tekton resources
 
@@ -59,3 +63,5 @@ rules:
       - "update"
 
       - "delete"
+
+
