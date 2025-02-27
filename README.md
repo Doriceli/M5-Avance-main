@@ -94,7 +94,7 @@ kubectl create -f manifests/taskrun/task-deploy.yaml -n diploe2
 
 
 
-
+--------------------------------------------------------------------
 ######## TEXTO QUE SE AÑADIÓ PARA LA PRÁCTICA 1
 # Avance
 Diplomado, Módulo 5, Avance del Proyecto
