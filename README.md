@@ -22,7 +22,7 @@ El código sigue una arquitectura Modelo-Vista-Controlador (MVC) para mantener u
 ## Conexión a la Base de Datos
 La aplicación se conecta a una base de datos **MongoDB** (NoMySQL) para gestionar la persistencia de los datos. La configuración de la conexión se encuentra en el archivo **application.properties** ubicado en *src/main/resources/* cuyo datos se le pasan a través de Dockerfile.
 
-IMAGEN DOCKERFILE
+![Dockerfile](_resources/Dockerfile-mongodb.JPG)
 
 ## Archivos YAML y su función
 Dentro de la carpeta **manifests**, encontrarás varios archivos YAML que se utilizan para definir los recursos necesarios para desplegar la aplicación en un clúster de Kubernetes.
@@ -33,45 +33,43 @@ Dentro de la carpeta **manifests**, encontrarás varios archivos YAML que se uti
 |service.yaml	|Configura el servicio que expone la aplicación, permitiendo el acceso desde fuera del clúster. Especifica el tipo de servicio (NodePort en entornos de desarrollo o LoadBalancer en producción).|
 |configmap.yaml	|Contiene configuraciones que pueden ser inyectadas en los pods, como variables de entorno o archivos de configuración. Permite modificar parámetros sin necesidad de reconstruir la imagen de la aplicación.|
 |secret.yaml|	Almacena información sensible, como credenciales de bases de datos o claves API, de manera segura y cifrada.|
-|git-clone-taskrun|Copia el código del repositorio.|
+|git-clone-taskrun.yaml|Copia el código del repositorio.|
 
-
-### deployment.yaml
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: m5-avance-app
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: m5-avance
-  template:
-    metadata:
-      labels:
-        app: m5-avance
-    spec:
-      containers:
-      - name: m5-avance-container
-        image: doriceli/m5-avance:latest
-        ports:
-        - containerPort: 8080
-```
 # Cómo Empezar
+
+## Configura la base de datos
+Asegúrate de tener una instancia de MoboDB en funcionamiento y actualiza los parámetros de conexión en el archivo *Dockerfile*.
 
 ## Clona el repositorio
 ```
 kubectl create -f manifest/taskrun/git-clone-taskrun.yaml
 ```
-## Configura la base de datos
-Asegúrate de tener una instancia de MoboDB en funcionamiento y actualiza los parámetros de conexión en *src/main/resources/application.properties*.
+### task-deploy.yaml
+```yaml
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: kubernetes-actions-
+  namespace: diploe2-dim
+spec:
+  serviceAccountName: tekton-sa
+  taskRef:
+    name: kubernetes-actions
+  params:
+    - name: script
+      value: |
+        kubectl delete deployment avance_rest
+        kubectl create deployment avance_rest --image=docker.io/doriceli/avance_rest:v4
+        echo "----------"
+        kubectl get deployment
+  workspaces:
+    - name: kubeconfig-dir
+      emptyDir: {}
+    - name: manifest-dir
+      emptyDir: {}
+```
+![task-deploy](_resources/Ejecucion-Task-Deploy.JPG)
 
-## Construye y ejecuta la aplicación
-```
-./mvnw clean install
-./mvnw spring-boot:run
-```
 ## Despliegue en Kubernetes
 
 Si deseas desplegar la aplicación en un clúster de Kubernetes, aplica los archivos YAML en la carpeta **manifests/tekton** y **manifest/taskrun**:
@@ -82,7 +80,7 @@ kubectl apply -f manifests/tekton/tekton-role.yaml -n diploe2
 kubectl apply -f manifests/tekton/tekton-rolebinding.yaml -n diploe2
 kubectl create -f manifests/taskrun/task-deploy.yaml -n diploe2
 ```
-
+![Orden de ejecución](_resources/Ejecucion-Tekton-SA-ROLE-RB.JPG)
 
 
 --------------------------------------------------------------------
