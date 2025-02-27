@@ -20,17 +20,10 @@ El núcleo de la aplicación está construido en Java y ofrece las siguientes fu
 El código sigue una arquitectura Modelo-Vista-Controlador (MVC) para mantener una separación clara entre la lógica de negocio, la presentación y el acceso a datos.
 
 ## Conexión a la Base de Datos
-La aplicación se conecta a una base de datos **MongoDB** (NoMySQL) para gestionar la persistencia de los datos. La configuración de la conexión se encuentra en el archivo **application.properties** ubicado en *src/main/resources/*.
+La aplicación se conecta a una base de datos **MongoDB** (NoMySQL) para gestionar la persistencia de los datos. La configuración de la conexión se encuentra en el archivo **application.properties** ubicado en *src/main/resources/* cuyo datos se le pasan a través de Dockerfile.
 
-```yaml
-spring.datasource.url=jdbc:mysql://localhost:3306/m5avance
-spring.datasource.username=root
-spring.datasource.password=admin123
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
-```
+IMAGEN DOCKERFILE
+
 ## Archivos YAML y su función
 Dentro de la carpeta **manifests**, encontrarás varios archivos YAML que se utilizan para definir los recursos necesarios para desplegar la aplicación en un clúster de Kubernetes.
 
@@ -40,6 +33,7 @@ Dentro de la carpeta **manifests**, encontrarás varios archivos YAML que se uti
 |service.yaml	|Configura el servicio que expone la aplicación, permitiendo el acceso desde fuera del clúster. Especifica el tipo de servicio (NodePort en entornos de desarrollo o LoadBalancer en producción).|
 |configmap.yaml	|Contiene configuraciones que pueden ser inyectadas en los pods, como variables de entorno o archivos de configuración. Permite modificar parámetros sin necesidad de reconstruir la imagen de la aplicación.|
 |secret.yaml|	Almacena información sensible, como credenciales de bases de datos o claves API, de manera segura y cifrada.|
+|git-clone-taskrun|Copia el código del repositorio.|
 
 
 ### deployment.yaml
@@ -65,14 +59,11 @@ spec:
         - containerPort: 8080
 ```
 # Cómo Empezar
-Para ejecutar este proyecto en tu entorno local, sigue estos pasos:
 
 ## Clona el repositorio
 ```
-git clone https://github.com/Doriceli/M5-Avance-main.git
-cd M5-Avance-main
+kubectl create -f manifest/taskrun/git-clone-taskrun.yaml
 ```
-
 ## Configura la base de datos
 Asegúrate de tener una instancia de MoboDB en funcionamiento y actualiza los parámetros de conexión en *src/main/resources/application.properties*.
 
