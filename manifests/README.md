@@ -22,7 +22,7 @@ El código sigue una arquitectura Modelo-Vista-Controlador (MVC) para mantener u
 ## Conexión a la Base de Datos
 La aplicación se conecta a una base de datos **MongoDB** (NoMySQL) para gestionar la persistencia de los datos. La configuración de la conexión se encuentra en el archivo **application.properties** ubicado en *src/main/resources/* cuyo datos se le pasan a través de Dockerfile.
 
-![Dockerfile](_resources/Dockerfile-mongodb.JPG)
+![Dockerfile](../_resources/Dockerfile-mongodb.JPG)
 
 ## Archivos YAML y su función
 Dentro de la carpeta **manifests**, encontrarás varios archivos YAML que se utilizan para definir los recursos necesarios para desplegar la aplicación en un clúster de Kubernetes.
@@ -68,7 +68,7 @@ spec:
     - name: manifest-dir
       emptyDir: {}
 ```
-![task-deploy](_resources/Ejecucion-Task-Deploy.JPG)
+![task-deploy](../_resources/Ejecucion-Task-Deploy.JPG)
 
 ## Despliegue en Kubernetes
 
@@ -80,7 +80,7 @@ kubectl apply -f manifests/tekton/tekton-role.yaml -n diploe2
 kubectl apply -f manifests/tekton/tekton-rolebinding.yaml -n diploe2
 kubectl create -f manifests/taskrun/task-deploy.yaml -n diploe2
 ```
-![Orden de ejecución](_resources/Ejecucion-Tekton-SA-ROLE-RB.JPG)
+![Orden de ejecución](../_resources/Ejecucion-Tekton-SA-ROLE-RB.JPG)
 
 
 --------------------------------------------------------------------
