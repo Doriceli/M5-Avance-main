@@ -28,37 +28,21 @@ La aplicación se conecta a una base de datos **MongoDB** (NoMySQL) para gestion
 Dentro de la carpeta **manifests**, encontrarás varios archivos YAML que se utilizan para definir los recursos necesarios para desplegar la aplicación en un clúster de Kubernetes.
 
 |  Carpeta  |  Archivo   | Descripción  |
-
 | ------------- | ------------- | ------------- |
-
 |manifests/tekton/ | tekton-e6bclone.yaml | Ejecuta la tarea git-clone en el espacio de nombres diploe2-dim. Clona el repositorio https://github.com/Doriceli/M5-Avance-main.git en un PVC (workspaces). |
-
 |manifests/tekton/ | tekton-e6blist.yaml | Ejecuta la tarea list-directory en el mismo namespace. Usa un PVC llamado workspaces como directorio de trabajo. |
-
 |manifests/tekton/ | tekton-e6bvolume.yaml | Define un PVC llamado workspaces con 1GiB de almacenamiento y acceso ReadWriteOnce. |
-
 |manifests/tekton/ | tekton-role.yaml | Permite a Tekton gestionar pods, PVCs, secretos, configmaps, deployments y recursos de Tekton (pipelineruns y taskruns). |
-
 |manifests/tekton/ | tekton-rolebinding.yaml | Asigna el tekton-role a la ServiceAccount tekton-sa en el namespace default. |
-
 |manifests/tekton/ | tekton-sa.yaml | Define una ServiceAccount tekton-sa en diploe2-dim. |
-
 |manifests/tekton/ | tekton-secret.yaml | Contiene credenciales para autenticarse en DockerHub. |
-
 |manifests/tekton/ | tekton-task.yaml | Define una tarea hello-world que simplemente imprime "Hello, World from Tekton!" usando un contenedor busybox. |
-
 |manifests/tekton/ | tekton-taskrun.yaml | Ejecuta la tarea hello-world. |
-
 |manifests/taskrun/ | buildah-run.yaml | Usa la tarea buildah para construir y subir una imagen Docker (docker.io/doriceli/avance_rest:v4). Usa almacenamiento en workspace y credenciales en dockerconfig-secret. |
-
-|manifests/taskrun/ | git-clone-taskrun.yaml | Similar al primer git-clone. |
-
+|manifests/taskrun/ | git-clone-taskrun.yaml | Similar al primer git-clone dentro de los YAML de tekton. |
 |manifests/taskrun/ | list-taskrun.yaml | Similar al list-directory. |
-
 |manifests/taskrun/ | pvc.yaml | Define un PVC llamado workspaces con 1GiB de almacenamiento y acceso ReadWriteOnce. |
-
 |manifests/taskrun/ | task-deploy.yaml | Ejecuta comandos kubectl para eliminar y recrear el deployment avance_rest con la imagen docker.io/doriceli/avance_rest:v4. |
-
 |manifests/taskrun/ | taskrun-maven.yaml | Ejecuta la tarea maven para compilar un proyecto con Maven (clean package -DskipTests). Usa una imagen Maven específica y un PVC para el código fuente. |
 
 # Cómo Empezar
