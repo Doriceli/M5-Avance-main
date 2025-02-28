@@ -22,18 +22,29 @@ El código sigue una arquitectura Modelo-Vista-Controlador (MVC) para mantener u
 ## Conexión a la Base de Datos
 La aplicación se conecta a una base de datos **MongoDB** (NoMySQL) para gestionar la persistencia de los datos. La configuración de la conexión se encuentra en el archivo **application.properties** ubicado en *src/main/resources/* cuyo datos se le pasan a través de Dockerfile.
 
-![Dockerfile](_resources/Dockerfile-mongodb.JPG)
+![Dockerfile](../_resources/Dockerfile-mongodb.JPG)
 
 ## Archivos YAML y su función
 Dentro de la carpeta **manifests**, encontrarás varios archivos YAML que se utilizan para definir los recursos necesarios para desplegar la aplicación en un clúster de Kubernetes.
 
-| Archivo |	Descripción |
-|---------|-------------|
-|deployment.yaml|	Define el despliegue de la aplicación, especificando el número de réplicas, la imagen de Docker y las variables de entorno necesarias. También incluye la estrategia de actualización para minimizar el tiempo de inactividad.|
-|service.yaml	|Configura el servicio que expone la aplicación, permitiendo el acceso desde fuera del clúster. Especifica el tipo de servicio (NodePort en entornos de desarrollo o LoadBalancer en producción).|
-|configmap.yaml	|Contiene configuraciones que pueden ser inyectadas en los pods, como variables de entorno o archivos de configuración. Permite modificar parámetros sin necesidad de reconstruir la imagen de la aplicación.|
-|secret.yaml|	Almacena información sensible, como credenciales de bases de datos o claves API, de manera segura y cifrada.|
-|git-clone-taskrun.yaml|Copia el código del repositorio.|
+|  Carpeta  |  Archivo   | Descripción  |
+| ------------- | ------------- | ------------- |
+|manifests/tekton/ | tekton-e6bclone.yaml | Ejecuta la tarea git-clone en el espacio de nombres diploe2-dim. Clona el repositorio https://github.com/Doriceli/M5-Avance-main.git en un PVC (workspaces). |
+|manifests/tekton/ | tekton-e6blist.yaml | Ejecuta la tarea list-directory en el mismo namespace. Usa un PVC llamado workspaces como directorio de trabajo. |
+|manifests/tekton/ | tekton-e6bvolume.yaml | Define un PVC llamado workspaces con 1GiB de almacenamiento y acceso ReadWriteOnce. |
+|manifests/tekton/ | tekton-role.yaml | Permite a Tekton gestionar pods, PVCs, secretos, configmaps, deployments y recursos de Tekton (pipelineruns y taskruns). |
+|manifests/tekton/ | tekton-rolebinding.yaml | Asigna el tekton-role a la ServiceAccount tekton-sa en el namespace default. |
+|manifests/tekton/ | tekton-sa.yaml | Define una ServiceAccount tekton-sa en diploe2-dim. |
+|manifests/tekton/ | tekton-secret.yaml | Contiene credenciales para autenticarse en DockerHub. |
+|manifests/tekton/ | tekton-task.yaml | Define una tarea hello-world que simplemente imprime "Hello, World from Tekton!" usando un contenedor busybox. |
+|manifests/tekton/ | tekton-taskrun.yaml | Ejecuta la tarea hello-world. |
+|manifests/taskrun/ | buildah-run.yaml | Usa la tarea buildah para construir y subir una imagen Docker (docker.io/doriceli/avance_rest:v4). Usa almacenamiento en workspace y credenciales en dockerconfig-secret. |
+|manifests/taskrun/ | git-clone-taskrun.yaml | Similar al primer git-clone. |
+|manifests/taskrun/ | list-taskrun.yaml | Similar al list-directory. |
+|manifests/taskrun/ | pvc.yaml | Define un PVC llamado workspaces con 1GiB de almacenamiento y acceso ReadWriteOnce. |
+|manifests/taskrun/ | task-deploy.yaml | Ejecuta comandos kubectl para eliminar y recrear el deployment avance_rest con la imagen docker.io/doriceli/avance_rest:v4. |
+|manifests/taskrun/ | taskrun-maven.yaml | Ejecuta la tarea maven para compilar un proyecto con Maven (clean package -DskipTests). Usa una imagen Maven específica y un PVC para el código fuente. |
+
 
 # Cómo Empezar
 
@@ -68,7 +79,7 @@ spec:
     - name: manifest-dir
       emptyDir: {}
 ```
-![task-deploy](_resources/Ejecucion-Task-Deploy.JPG)
+![task-deploy](../_resources/Ejecucion-Task-Deploy.JPG)
 
 ## Despliegue en Kubernetes
 
@@ -80,7 +91,7 @@ kubectl apply -f manifests/tekton/tekton-role.yaml -n diploe2
 kubectl apply -f manifests/tekton/tekton-rolebinding.yaml -n diploe2
 kubectl create -f manifests/taskrun/task-deploy.yaml -n diploe2
 ```
-![Orden de ejecución](_resources/Ejecucion-Tekton-SA-ROLE-RB.JPG)
+![Orden de ejecución](../_resources/Ejecucion-Tekton-SA-ROLE-RB.JPG)
 
 
 --------------------------------------------------------------------
