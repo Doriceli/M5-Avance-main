@@ -1,0 +1,37 @@
+apiVersion: v1
+
+kind: ServiceAccount
+
+metadata:
+
+  name: tekton-triggers-sa
+
+  namespace: diploe2-dim
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+
+kind: RoleBinding
+
+metadata:
+
+  name: triggers-eventlistener-binding
+
+  namespace: diploe2-dim
+
+subjects:
+
+  - kind: ServiceAccount
+
+    name: tekton-triggers-sa
+
+    namespace: diploe2-dim
+
+roleRef:
+
+  apiGroup: rbac.authorization.k8s.io
+
+  kind: ClusterRole
+
+  name: tekton-triggers-eventlistener-roles

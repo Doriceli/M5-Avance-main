@@ -1,0 +1,97 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+
+kind: TriggerTemplate
+
+metadata:
+
+  name: tekton-trigger-template-cicd
+
+  namespace: diploe2-dim
+
+spec:
+
+  params:
+
+    - name: repo-url
+
+      description: https://github.com/Doriceli/M5-Avance-main.git
+
+    - name: branch-name
+
+      description: main
+
+    - name: maven-image
+
+      description: gcr.io/cloud-builders/mvn@sha256:8f38a2667125a8d83f6e1997847fedb6a06f041c90e2244884153d85d95f869b
+
+    - name: image-name
+
+      description: docker.io/doriceli/avance_rest:v4
+
+    - name: deployment-name
+
+      description: avance-rest
+
+  resourcetemplates:
+
+    - apiVersion: tekton.dev/v1beta1
+
+      kind: PipelineRun
+
+      metadata:
+
+        generateName: pipeline-clone-package #ejercicio 8
+
+      spec:
+
+        serviceAccountName: tekton-sa
+
+        pipelineRef:
+
+          name: pipeline-clone-package #ejercicio 8
+
+        params:
+
+          - name: repo-url
+
+            value: $(tt.params.repo-url)
+
+          - name: branch-name
+
+            value: $(tt.params.branch-name)
+
+          - name: maven-image
+
+            value: $(tt.params.maven-image)
+
+          - name: image-name
+
+            value: $(tt.params.image-name)
+
+          - name: deployment-name
+
+            value: $(tt.params.deployment-name)
+
+        workspaces:
+
+          - name: maven-settings
+
+            configmap:
+
+              name: maven-settings
+
+          - name: workspace
+
+            persistentVolumeClaim:
+
+              claimName: workspace
+
+          - name: empty-dir
+
+            emptyDir: {}
+
+          - name: dockerconfig-secret
+
+            secret:
+
+              secretName: dockerconfig-secret
