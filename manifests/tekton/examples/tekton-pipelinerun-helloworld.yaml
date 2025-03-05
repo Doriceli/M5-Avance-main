@@ -1,35 +1,18 @@
 apiVersion: tekton.dev/v1beta1
-
 kind: PipelineRun
-
 metadata:
-
   generateName: pipelinerun-helloworld
-
   namespace: diploe2-dim
-
 spec:
-
   serviceAccountName: tekton-sa
-
   pipelineRef:
-
     name: pipeline-hello-world
-
   params:
-
     - name: your-name
-
       value: "Doriceli"
-
     - name: repo-url
-
       value: https://github.com/Doriceli/M5-Avance-main.git
-
   workspaces:
-
     - name: empty-dir
-
       emptyDir: {}
-
 
