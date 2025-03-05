@@ -1,0 +1,48 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-clone-package
+  namespace: diploe2-dim
+spec:
+  description: |
+    A pipeline that clones a repository and builds it using Maven with clean package goal.
+  params:
+    - name: repo-url
+      type: string
+    - name: maven-image
+      type: string
+  workspaces:
+    - name: workspace
+    - name: maven-settings
+  tasks:
+    - name: fetch-repository
+      taskRef:
+        kind: Task
+        name: git-clone
+      params:
+        - name: url
+          value: $(params.repo-url)
+        - name: deleteExisting
+          value: "true"
+      workspaces:
+        - name: output
+          workspace: workspace
+    - name: maven
+      taskRef:
+        name: maven
+      runAfter:
+        - fetch-repository
+      params:
+        - name: GOALS
+          value:
+            - -B
+            - -DskipTests
+            - clean
+            - package
+        - name: MAVEN_IMAGE
+          value: $(params.maven-image)
+      workspaces:
+        - name: maven-settings
+          workspace: maven-settings
+        - name: source
+          workspace: workspace
